@@ -8,7 +8,7 @@
     <title>Weather</title>
 </head>
 <body>
-    <h1>Weather API...</h1>
+    <h1>Weather APP...</h1>
 <form method="POST" action="/">
   <input type="text" name="myInput" list="europe-countries" placeholder="Enter country...">
   <datalist id="europe-countries">
@@ -35,22 +35,52 @@
   <button type="submit">Submit</button>
 </form>
 <br><br>
-  <center>
-      <table>
-          <tr>
-            <td><b>location<b></td>
-            <td><i><%=locals.location%></i></td>
-          </tr>
-          <tr>
-            <td><b>temperature</b></td>
-            <td><i><%=locals.temperature%></i></td>
-          </tr>
-          <tr>
-              <td><b>description</b></td>
-              <td><i><%=locals.description%></i></td>
-            </tr>
-        </table>
-  </center>
+<center>
+<table>
+    <tr>
+      <!-- <td style="background-color: rgb(215, 211, 211);" ><b>countryName<b></td> -->
+      <td><b>countryName<b></td>
+      <td><i><%=locals.countryName%></i></td>
+    </tr>
+    <tr>
+        <td><b>date<b></td>
+        <td><i><%=locals.date%></i></td>
+      </tr>
+    <tr>
+        <td><b>lon,lat</b></td>
+        <td><i><%=locals.lonlat%></i></td>
+    </tr>
+    <tr>
+        <td><b>temperature</b></td>
+        <td><i><%=locals.temperature%></i></td>
+    </tr>
+    <tr>
+        <td><b>pressure</b></td>
+        <td><i><%=locals.pressure%></i></td>
+    </tr>
+    <tr>
+        <td><b>humidity</b></td>
+        <td><i><%=locals.humidity%></i></td>
+    </tr>
+    <tr>
+        <td><b>sunrise</b></td>
+        <td><i><%=locals.sunrise%></i></td>
+    </tr>
+    <tr>
+        <td><b>sunset</b></td>
+        <td><i><%=locals.sunset%></i></td>
+    </tr>
+    <tr>
+        <td><b>speed,deg,gust</b></td>
+        <td><i><%=locals.speed_deg_gust%></i></td>
+    </tr>
+    
+    <tr>
+        <td><b>description</b></td>
+        <td><i><%=locals.description%></i></td>
+    </tr>
+  </table>
+</center>
 </body>
 </html>
 

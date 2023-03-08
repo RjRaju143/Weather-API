@@ -4,30 +4,32 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const express = require('express');
+const app = express();
 const axios = require('axios');
 const bodyParser = require('body-parser'); // Import the body-parser middleware
 const path = require('path')
-const app = express();
-const PORT = process.env.PORT || 4462;
+const PORT = process.env.PORT || 4463;
 
 // loggers
 const morgan = require('morgan')
 app.use(morgan('dev'))
 
+// view engine and static public...
 app.set('view engine', 'ejs')
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Add the body-parser middleware to parse the request body
 app.use(bodyParser.urlencoded({ extended: true }));
-
+/// Routers..
 // Define a route to handle weather data requests
 app.get('/', async (req, res) => {
-  try {
-    res.status(200).render('home')
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error);
-  }
+  res.status(200).render('home.ejs',(err,html)=>{
+    if (err) {
+      res.status(500).send('500 Internal Server Error');
+    } else {
+      res.send(html);
+    }
+  })
 });
 
 // Use a POST request handler to handle form submissions
@@ -36,26 +38,42 @@ app.post('/',async (req, res) => {
     const myInputValue = req.body.myInput;
     // Make an HTTP request to the weather service API  countruoutput
     const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${myInputValue}&APPID=${process.env.WEATHER_API_KEY}`);
+
     // Extract the relevant weather data
     const data = response.data;
     const weather = {
-      location: `${data.name}, ${data.sys.country}`,
-      temperature: data.main.temp,
+      date:response.headers.date,
+      countryName: `${data.name}, ${data.sys.country}`,
+      lon_lat: `${data.coord.lon}, ${data.coord.lat}`,
+      temperature: `${data.main.temp}`,
+      pressure:`${data.main.pressure}`,
+      humadity:`${data.main.humidity}`,
+      sunrise:`${data.sys.sunrise}`,
+      sunset:`${data.sys.sunset}`,
+      speed_deg_gust:`${data.wind.speed},${data.wind.deg},${data.wind.gust}`,
       description: data.weather[0].description
     }
-    res.render('weatherTemplate',{
-      location:`${weather.location}`,
+    res.status(200).render('weatherTemplate',{
+      date:weather.date,
+      countryName:`${weather.countryName}`,
+      lonlat:`${weather.lon_lat}`,
       temperature:`${weather.temperature}`,
-      description:`${weather.description}`,
+      pressure:`${weather.pressure}`,
+      humidity:`${weather.humadity}`,
+      sunrise:`${weather.sunrise}`,
+      sunset:`${weather.sunset}`,
+      speed_deg_gust:weather.speed_deg_gust,
+      description:weather.description
     })
-    console.table(weather)
   }catch(err){
-    // res.status(500).send(`Internal Server Error`)
-    // res.sendStatus(500)
-    res.render('home',{
-      error:`Invalid Input`
-    })
-    console.error(err.message)
+    if (err.hostname) {
+      console.error(err.hostname)
+      res.status(500).send('500 (Internal Server Error)')
+    } else {
+      res.render('home',{
+        error:`Invalid Input`
+      })
+    }
   }
 })
 
