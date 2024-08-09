@@ -19,5 +19,5 @@ jobs:
       with:
         node-version: 16.x
     - run: npm install
-    - run: pm2 restart app-name
+    - run: pm2 start --name "weather" server.js
     
